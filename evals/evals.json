@@ -1,0 +1,68 @@
+{
+  "skill_name": "hackathon-demo-video",
+  "description": "Hackathon demo video generation pipeline: Playwright recording → edge-tts narration → subtitle rendering → ffmpeg composition",
+  "evals": [
+    {
+      "id": 1,
+      "name": "tradetrace-full-demo",
+      "prompt": "给 TradeTrace 项目生成一个黑客松演示视频。项目地址: https://tradetrace.ygz0425.workers.dev/。旁白: TradeTrace 验证 DeepBook Predict 结果。输入交易编号，自动查询预言机数据。展示头寸类型、方向和执行价。每条分析原因映射链上证据。哈希存储 Walrus 不可篡改。输出 JSON 格式供评委验证。基于 Sui 和 Walrus 的开源项目。",
+      "expected_output": "demo/tradetrace-demo-subtitled.mp4 文件，1920×1080，包含浏览器操作录制、Yunyang 男声旁白、烧录字幕",
+      "files": [],
+      "assertions": [
+        {"text": "ffprobe 能读出视频流（H.264）和音频流（AAC）", "check": "ffprobe -v quiet -show_streams <output> | grep codec_name | wc -l ≥ 2"},
+        {"text": "输出为 1920×1080", "check": "ffprobe -v quiet -show_streams <output> | grep -E '^(width|height)'"},
+        {"text": "旁白已烧录为音频轨", "check": "ffprobe -v quiet -show_streams <output> | grep codec_name=aac"},
+        {"text": "视频时长 ≥ 50 秒", "check": "ffprobe -v quiet -show_format <output> | grep duration"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "plp-risk-console-demo",
+      "prompt": "录一个 PLP Risk Console 的演示视频。项目: https://plp-risk-console.ygz0425.workers.dev/。旁白写中文，描述风险监控功能。",
+      "expected_output": "demo/plp-risk-console-demo-subtitled.mp4 文件，包含页面操作录制和中文旁白",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "mobile-portrait-demo",
+      "prompt": "给这个移动端项目录一个竖屏演示视频: https://my-mobile-app.workers.dev。旁白描述移动端功能。用 portrait 格式和 mobile 录制。",
+      "expected_output": "1080×1920 竖屏视频，移动端视口录制，中文旁白+字幕",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "english-narration-demo",
+      "prompt": "Record an English demo video for this project: https://my-hackathon-project.workers.dev. Narration: This is our hackathon project. It helps users track their carbon footprint on-chain. First we connect wallet. Then we mint a carbon credit NFT. The transaction is recorded on Sui. Check the explorer for verification.",
+      "expected_output": "1920×1080 video with English narration (en-US-GuyNeural) and English subtitles",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "square-social-media-demo",
+      "prompt": "帮我生成一个方形的社媒演示视频。项目地址: https://my-project.workers.dev。旁白简短介绍核心功能，适合发在社交媒体。用 square 格式。",
+      "expected_output": "1080×1080 方形视频，桌面录制，简短中文旁白",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "desktop-to-portrait-framed",
+      "prompt": "桌面网页录成竖屏视频，四周留黑边。项目: https://my-project.workers.dev。旁白: 桌面版功能演示。capture desktop，format portrait，layout framed。",
+      "expected_output": "1080×1920 竖屏视频，桌面 1920×1080 录制居中留黑边，中文旁白",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "custom-steps-complex-flow",
+      "prompt": "帮我给这个项目做个 demo 视频: https://my-hackathon-project.workers.dev。用自定义操作: 先点 Login，再点 Dashboard，等数据加载，然后滚动。旁白描述功能。",
+      "expected_output": "使用 --steps 参数的自定义操作序列生成视频，包含 click/fill/wait_text/scroll 操作",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "fast-preview-mode",
+      "prompt": "快速预览模式给项目录制: https://my-hackathon-project.workers.dev。旁白简短。用 veryfast preset 加速编码，crf 23。",
+      "expected_output": "1920×1080 视频，使用 --preset veryfast --crf 23，编码速度更快但画质略低",
+      "files": []
+    }
+  ]
+}
